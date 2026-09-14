@@ -1,8 +1,13 @@
 import { toBaseMessages, toUIMessageStream } from '@ai-sdk/langchain';
-import { createUIMessageStreamResponse, type UIMessage } from 'ai';
+import {
+    createUIMessageStream,
+    createUIMessageStreamResponse,
+    type UIMessage,
+} from 'ai';
 import { HumanMessage } from '@langchain/core/messages';
 
 import { workflow } from '@/graph/v1/pipeline';
+import { createGraphStreamOptions } from '@/lib/graph-run-config';
 
 export const maxDuration = 60;
 
@@ -39,17 +44,20 @@ export async function POST(request: Request) {
             );
         }
 
-        const stream = await workflow.stream(
-            { messages: [incoming] },
-            {
-                streamMode: ['values', 'messages', 'updates'],
-                recursionLimit: 25,
-                configurable: { thread_id: threadId },
-            },
-        );
-
+        // UI Message Stream (SSE) — pairs with DefaultChatTransport on the client.
+        // @see https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot
+        // @see https://sdk.vercel.ai/docs/reference/ai-sdk-ui/create-ui-message-stream
         return createUIMessageStreamResponse({
-            stream: toUIMessageStream(stream),
+            stream: createUIMessageStream({
+                originalMessages: messages,
+                execute: async ({ writer }) => {
+                    const graphStream = await workflow.stream(
+                        { messages: [incoming] },
+                        createGraphStreamOptions({ thread_id: threadId }),
+                    );
+                    writer.merge(toUIMessageStream(graphStream));
+                },
+            }),
         });
     } catch (error) {
         console.error('[api/v1/chat]', error);
