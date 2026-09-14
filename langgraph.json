@@ -3,6 +3,7 @@
     "dockerfile": false,
     "env": ".env",
     "graphs": {
-        "workflow": "./src/graph/v1/pipeline.ts:workflow"
+        "workflow": "./src/graph/v1/pipeline.ts:workflow",
+        "multi-agent-workflow": "./src/graph/v2/multi-agent.ts:wrokflow"
     }
 }
