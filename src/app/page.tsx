@@ -36,7 +36,7 @@ const HomePage = () => {
     const transport = useMemo(
         () =>
             new DefaultChatTransport({
-                api: '/api/v1/chat',
+                api: '/api/v2/chat',
                 prepareSendMessagesRequest: ({ id, messages }) => ({
                     body: {
                         threadId: id,
@@ -80,9 +80,7 @@ const HomePage = () => {
 
     return (
         <div className="flex h-dvh min-h-0 flex-col bg-zinc-50 dark:bg-zinc-950">
-            <header
-                className="shrink-0 border-b border-zinc-200/80 bg-white/90 px-4 py-3 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/90"
-            >
+            <header className="shrink-0 border-b border-zinc-200/80 bg-white/90 px-4 py-3 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/90">
                 <div className="mx-auto flex w-full max-w-3xl items-center justify-between gap-4">
                     <div className="min-w-0">
                         <h1 className="truncate text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -148,18 +146,14 @@ const HomePage = () => {
                     )}
                     {awaitingAssistantRow ? (
                         <div className="flex justify-start">
-                            <AssistantLoadingRow
-                                label="Running research pipeline…"
-                            />
+                            <AssistantLoadingRow label="Running research pipeline…" />
                         </div>
                     ) : null}
                     <div ref={scrollAnchorRef} className="h-px shrink-0" />
                 </div>
             </div>
 
-            <footer
-                className="shrink-0 border-t border-zinc-200/80 bg-white/95 px-4 py-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95"
-            >
+            <footer className="shrink-0 border-t border-zinc-200/80 bg-white/95 px-4 py-4 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95">
                 <div className="mx-auto w-full max-w-3xl">
                     {error ? (
                         <p
