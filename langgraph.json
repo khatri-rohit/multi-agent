@@ -1,0 +1,8 @@
+{
+    "node": "24",
+    "dockerfile": false,
+    "env": ".env",
+    "graphs": {
+        "workflow": "./src/graph/v1/pipeline.ts:workflow"
+    }
+}

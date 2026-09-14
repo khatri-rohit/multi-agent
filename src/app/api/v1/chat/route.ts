@@ -2,7 +2,7 @@ import { toBaseMessages, toUIMessageStream } from '@ai-sdk/langchain';
 import { createUIMessageStreamResponse, type UIMessage } from 'ai';
 import { HumanMessage } from '@langchain/core/messages';
 
-import { graph } from '@/graph/v1/pipeline';
+import { workflow } from '@/graph/v1/pipeline';
 
 export const maxDuration = 60;
 
@@ -39,10 +39,11 @@ export async function POST(request: Request) {
             );
         }
 
-        const stream = await graph.stream(
+        const stream = await workflow.stream(
             { messages: [incoming] },
             {
                 streamMode: ['values', 'messages', 'updates'],
+                recursionLimit: 25,
                 configurable: { thread_id: threadId },
             },
         );
